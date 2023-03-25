@@ -1,5 +1,9 @@
-const register = async (req, res) => {
-  return res.send({ fn: "register" });
+import {StatusCodes} from "http-status-codes"
+import User from "../models/User.mjs";
+
+const register = async (req, res,) => {
+    const user = await User.create(req.body);
+    return res.status(StatusCodes.CREATED).json({ user });
 };
 
 const login = async (req, res) => {

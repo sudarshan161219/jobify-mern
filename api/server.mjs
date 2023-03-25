@@ -1,12 +1,16 @@
 import express from "express";
+import "express-async-errors"
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+
 //* -------- db connection import -------- //
 import connect from "./db/connect.mjs";
+
 //*  -------- route import --------  //
 import authRouter from "./routes/authRoutes.mjs";
 import jobsRouter from "./routes/jobsRoutes.mjs";
+
 //*  -------- middleware imports --------  //
 import notFoundMiddleware from "./middleware/not-found.mjs";
 import errorHandlerMiddleware from "./middleware/error-handler.mjs";

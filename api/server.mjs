@@ -2,24 +2,35 @@ import express from "express";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-
-//$ ---------------- //
+//* -------- db connection import -------- //
 import connect from "./db/connect.mjs";
-
-//* middleware  //
+//*  -------- route import --------  //
+import authRouter from "./routes/authRoutes.mjs";
+import jobsRouter from "./routes/jobsRoutes.mjs";
+//*  -------- middleware imports --------  //
 import notFoundMiddleware from "./middleware/not-found.mjs";
 import errorHandlerMiddleware from "./middleware/error-handler.mjs";
 
+
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
+
+
+//* middleware  built in from express  //
+app.use(express.json())
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello, World!</h1>");
 });
 
+//* routers
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/jobs", jobsRouter);
+
 //* middleware //
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
 
 const start = async () => {
   try {

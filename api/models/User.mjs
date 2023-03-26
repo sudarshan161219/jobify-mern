@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 const { Schema, model } = mongoose;
 
@@ -28,6 +31,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: 6,
+    select: false,
   },
 
   lastName: {
@@ -47,8 +51,14 @@ const userSchema = new Schema({
 
 userSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt)
+  this.password = await bcrypt.hash(this.password, salt);
 });
+
+userSchema.methods.createJWT = function () {
+  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_LIFETIME,
+  });
+};
 
 const userModel = model("User", userSchema);
 

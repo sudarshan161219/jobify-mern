@@ -1,8 +1,9 @@
 import express from "express";
-import "express-async-errors"
+import "express-async-errors";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+
 
 //* -------- db connection import -------- //
 import connect from "./db/connect.mjs";
@@ -15,16 +16,16 @@ import jobsRouter from "./routes/jobsRoutes.mjs";
 import notFoundMiddleware from "./middleware/not-found.mjs";
 import errorHandlerMiddleware from "./middleware/error-handler.mjs";
 
-
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 
-
 //* middleware  built in from express  //
-app.use(express.json())
+app.use(express.json());
+
+
 
 app.get("/", (req, res) => {
-  res.send("<h1>Hello, World!</h1>");
+  res.json({msg: "Hello, World!"});
 });
 
 //* routers
@@ -34,7 +35,6 @@ app.use("/api/v1/jobs", jobsRouter);
 //* middleware //
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
-
 
 const start = async () => {
   try {

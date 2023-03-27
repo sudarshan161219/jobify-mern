@@ -37,7 +37,7 @@ const reducer = (state, action) => {
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
       showAlert: true,
-      alertType: "success",
+      alertType: "alert-success",
       alertText: "User Created!,  Redirecting.....",
     };
   }
@@ -47,7 +47,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       showAlert: true,
-      alertType: "danger",
+      alertType: "alert-danger",
       alertText: action.payload.msg,
     };
   }

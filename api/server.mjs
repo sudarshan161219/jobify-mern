@@ -1,9 +1,9 @@
 import express from "express";
 import "express-async-errors";
 const app = express();
+import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
-import bodyParser from "body-parser";
 
 //* -------- db connection import -------- //
 import connect from "./db/connect.mjs";
@@ -19,19 +19,23 @@ import errorHandlerMiddleware from "./middleware/error-handler.mjs";
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
 //* middleware  built in from express  //
 app.use(express.json());
-app.use(bodyParser.json())
-
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
-  res.json({msg: "Hello, World!"});
+  res.json({ msg: "Hello, World!" });
 });
 
 app.get("/api/v1", (req, res) => {
-  res.json({msg: "API"});
+  res.json({ msg: "API" });
 });
-
 
 //* routers
 app.use("/api/v1/auth", authRouter);

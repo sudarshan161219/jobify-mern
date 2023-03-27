@@ -3,7 +3,7 @@ import "express-async-errors";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-
+import bodyParser from "body-parser";
 
 //* -------- db connection import -------- //
 import connect from "./db/connect.mjs";
@@ -21,12 +21,17 @@ const uri = process.env.MONGO_URI;
 
 //* middleware  built in from express  //
 app.use(express.json());
-
+app.use(bodyParser.json())
 
 
 app.get("/", (req, res) => {
   res.json({msg: "Hello, World!"});
 });
+
+app.get("/api/v1", (req, res) => {
+  res.json({msg: "API"});
+});
+
 
 //* routers
 app.use("/api/v1/auth", authRouter);

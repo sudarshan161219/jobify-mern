@@ -2,6 +2,7 @@ import express from "express";
 import "express-async-errors";
 const app = express();
 import cors from "cors";
+import morgan from "morgan";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -28,6 +29,11 @@ const corsOptions = {
 //* middleware  built in from express  //
 app.use(express.json());
 app.use(cors(corsOptions));
+
+
+if(process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev'))
+}
 
 app.get("/", (req, res) => {
   res.json({ msg: "Hello, World!" });

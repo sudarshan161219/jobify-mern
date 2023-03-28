@@ -14,7 +14,7 @@ const userSchema = new Schema({
     trim: true,
     unique: true,
     minlength: 3,
-    maxlength: [20, "name can not be more than 15 characters"],
+    maxlength: [20, "name can not be more than 20 characters"],
   },
 
   email: {
@@ -58,6 +58,11 @@ userSchema.methods.createJWT = function () {
   return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
+};
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
 };
 
 const userModel = model("User", userSchema);

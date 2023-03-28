@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.mjs";
-import { BadRequestError } from "../errors/export.js";
+import { BadRequestError, UnauthenticatedError } from "../errors/export.js";
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -26,7 +26,23 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  return res.send({ fn: "login" });
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new BadRequestError("Please provide all values");
+  }
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    throw new UnauthenticatedError("Invalid Credentials");
+  }
+
+  const isPasswordCorrect = await user.comparePassword(password);
+  user.password = undefined;
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError("Invalid Credentials");
+  }
+  const token = user.createJWT();
+
+  res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
 
 const updateUser = async (req, res) => {

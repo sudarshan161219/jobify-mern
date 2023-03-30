@@ -1,10 +1,11 @@
-import express from "express";
-import "express-async-errors";
+import express from 'express';
 const app = express();
-import cors from "cors";
-import morgan from "morgan";
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
+import 'express-async-errors';
+import morgan from 'morgan';
+import cors from "cors";
+
 
 //* -------- db connection import -------- //
 import connect from "./db/connect.mjs";

@@ -38,6 +38,42 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  //* axios global setup👇
+  //$ axios.defaults.headers['Authorization'] = `Bearer ${state.token}`
+
+  //* axios custom instance👇
+  const authFetch = axios.create({
+    baseURL: "http://localhost:4000/api/v1",
+    headers: {
+      Authorization: `Bearer ${state.token}`,
+    },
+  });
+
+  //* axios interceptors 👇 for request
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  //* axios interceptors 👇 for response
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      console.log(error.response);
+      if (error.response.status === 401) {
+        console.log("AUTH ERROR");
+      }
+      return Promise.reject(error);
+    }
+  );
+
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
     clearAlert();
@@ -147,7 +183,12 @@ const AppProvider = ({ children }) => {
 
   //* update user
   const updateUser = async (currentUser) => {
-    console.log(currentUser);
+    try {
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+      console.log(data);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   return (
@@ -161,7 +202,7 @@ const AppProvider = ({ children }) => {
         setupUser,
         toggleSidebar,
         logoutUser,
-        updateUser
+        updateUser,
       }}
     >
       {children}

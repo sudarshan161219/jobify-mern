@@ -17,6 +17,7 @@ import jobsRouter from "./routes/jobsRoutes.mjs";
 //*  -------- middleware imports --------  //
 import notFoundMiddleware from "./middleware/not-found.mjs";
 import errorHandlerMiddleware from "./middleware/error-handler.mjs";
+import authenticateUser from "./middleware/auth.mjs"
 
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
@@ -46,7 +47,7 @@ app.get("/api/v1", (req, res) => {
 
 //* routers
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", jobsRouter);
+app.use("/api/v1/jobs", authenticateUser, jobsRouter);
 
 //* middleware //
 app.use(notFoundMiddleware);

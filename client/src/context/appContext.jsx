@@ -264,6 +264,7 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  //* get job //GET
   const getJobs = async () => {
     let url = `/jobs`;
 
@@ -282,6 +283,14 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const setEditJob = (id) => {
+    console.log(`set edit job : ${id}`);
+  };
+
+  const deleteJob = (id) => {
+    console.log(`delete : ${id}`);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -297,7 +306,9 @@ const AppProvider = ({ children }) => {
         handleChange,
         clearValues,
         createJob,
-        getJobs
+        getJobs,
+        setEditJob,
+        deleteJob
       }}
     >
       {children}

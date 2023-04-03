@@ -23,6 +23,8 @@ import {
   CREATE_JOB_BEGIN,
   CREATE_JOB_SUCCESS,
   CREATE_JOB_ERROR,
+  GET_JOB_BEGIN,
+  GET_JOB_SUCCESS,
 } from "./actions";
 
 const user = localStorage.getItem("user");
@@ -47,6 +49,11 @@ const initialState = {
   jobType: "full-time",
   statusOptions: ["interview", "declined", "pending"],
   status: "pending",
+
+  jobs: [],
+  totalJobs: 0,
+  numofPages: 1,
+  page: 1,
 };
 
 const AppContext = React.createContext();
@@ -231,6 +238,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CLEAR_VALUES });
   };
 
+  //* create job //POST
   const createJob = async () => {
     dispatch({ type: CREATE_JOB_BEGIN });
     try {
@@ -256,6 +264,24 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const getJobs = async () => {
+    let url = `/jobs`;
+
+    dispatch({ type: GET_JOB_BEGIN });
+    try {
+      const { data } = await authFetch.get(url);
+      const { jobs, totalJobs, numofPages } = data;
+      dispatch({
+        type: GET_JOB_SUCCESS,
+        payload: { jobs, totalJobs, numofPages },
+      });
+    } catch (error) {
+      console.log(error.response);
+      // loginUser();
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -271,6 +297,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         clearValues,
         createJob,
+        getJobs
       }}
     >
       {children}

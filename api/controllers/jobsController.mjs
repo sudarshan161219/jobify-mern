@@ -2,6 +2,7 @@ import Job from "../models/Job.mjs";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/export.js";
 
+//* Create job
 const createJob = async (req, res) => {
   const { position, company } = req.body;
   if (!position || !company) {
@@ -12,15 +13,35 @@ const createJob = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ job });
 };
 
+//* Get All job
 const getAllJobs = async (req, res) => {
   const jobs = await Job.find({ createdBy: req.user.userId });
- return res
+  return res
     .status(StatusCodes.OK)
     .json({ jobs, totalJobs: jobs.length, numofPages: 1 });
 };
 
+// * Update Job
 const updateJob = async (req, res) => {
-  return res.send({ fn: "updateJob" });
+  const { id: jobId } = req.params;
+  const { company, position } = req.body;
+
+  if (!position || !company) {
+    throw new BadRequestError("Please provide all values");
+  }
+
+  const job = await Job.findOne({ _id: jobId });
+  if (!job) {
+    throw new NotFoundError(`No job with id : ${jobId}`);
+  }
+
+  //$ check permissions
+  const updatedJob = await Job.findOneAndUpdate({ _id: jobId }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(StatusCodes.CREATED).json({ updatedJob });
 };
 
 const deleteJob = async (req, res) => {

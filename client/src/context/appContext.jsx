@@ -33,6 +33,7 @@ import {
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
+  CHANGE_PLANS,
 } from "./actions";
 
 const user = localStorage.getItem("user");
@@ -289,8 +290,8 @@ const AppProvider = ({ children }) => {
 
   //* get job //GET
   const getJobs = async () => {
-    const { search, searchStatus, searchType, sort } = state;
-    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    const { page, search, searchStatus, searchType, sort } = state;
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
     if (search) {
       url = url + ` search=${search}`;
     }
@@ -367,6 +368,10 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PLANS, payload: { page } });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -388,6 +393,7 @@ const AppProvider = ({ children }) => {
         editJob,
         deleteJob,
         showStats,
+        changePage 
       }}
     >
       {children}

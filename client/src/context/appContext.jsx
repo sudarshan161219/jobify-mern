@@ -305,8 +305,7 @@ const AppProvider = ({ children }) => {
         payload: { jobs, totalJobs, numofPages },
       });
     } catch (error) {
-      console.log(error.response);
-      // loginUser();
+      logoutUser();
     }
     clearAlert();
   };
@@ -363,7 +362,7 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(error.response);
+      logoutUser();
     }
     clearAlert();
   };
@@ -393,7 +392,7 @@ const AppProvider = ({ children }) => {
         editJob,
         deleteJob,
         showStats,
-        changePage 
+        changePage,
       }}
     >
       {children}
